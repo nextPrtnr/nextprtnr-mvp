@@ -1,5 +1,5 @@
-// nextPrtnr MVP v1: React + Tailwind App (with Landing Page)
-// Chatbot Onboarding → Auto Profile → Match Suggestions
+// nextPrtnr MVP v1: React + Tailwind App (Enhanced)
+// Chatbot Onboarding → Auto Profile → Match Suggestions + Theme Toggle + Card Flip
 
 import React, { useState } from 'react';
 import './App.css';
@@ -11,6 +11,7 @@ const sampleMatches = [
     skills: ['React', 'Firebase'],
     interests: ['AI', 'Startups'],
     location: 'Dhaka',
+    about: 'Builder with a passion for product-led growth.'
   },
   {
     name: 'Mahi',
@@ -18,6 +19,7 @@ const sampleMatches = [
     skills: ['Figma', 'Design Thinking'],
     interests: ['Hackathons', 'Design'],
     location: 'Chittagong',
+    about: 'Focused on design systems and startup branding.'
   },
   {
     name: 'Rafiq',
@@ -25,6 +27,7 @@ const sampleMatches = [
     skills: ['Business Strategy', 'Pitching'],
     interests: ['Startup Funding'],
     location: 'Sylhet',
+    about: 'Serial founder with a love for MVP execution.'
   },
 ];
 
@@ -42,9 +45,10 @@ const questions = [
 ];
 
 function App() {
-  const [step, setStep] = useState(-1); // start with landing page
+  const [step, setStep] = useState(-1);
   const [answers, setAnswers] = useState([]);
   const [showProfile, setShowProfile] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -59,12 +63,24 @@ function App() {
   const finishChat = () => setShowProfile(true);
   const startChat = () => setStep(0);
 
+  const themeClass = darkMode ? 'bg-black text-white' : 'bg-white text-black';
+
   return (
-    <div className="bg-black min-h-screen text-white font-sans p-6">
+    <div className={`${themeClass} min-h-screen font-sans p-6 transition-colors duration-500`}>
+      <div className="flex justify-between mb-6">
+        <h1 className="text-xl font-bold">nextPrtnr</h1>
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="px-4 py-1 rounded border border-gray-500 hover:bg-gray-700 hover:text-white"
+        >
+          Toggle {darkMode ? 'Light' : 'Dark'} Mode
+        </button>
+      </div>
+
       {step === -1 ? (
-        <div className="text-center flex flex-col items-center justify-center min-h-screen">
-          <h1 className="text-5xl font-bold mb-4">nextPrtnr</h1>
-          <p className="text-xl text-gray-300 mb-8">Where Vibes and Vision Match</p>
+        <div className="text-center flex flex-col items-center justify-center min-h-[70vh]">
+          <h1 className="text-5xl font-bold mb-4">Find Your Perfect Partner</h1>
+          <p className="text-xl text-gray-400 mb-8">Where Vibes and Vision Match</p>
           <button
             onClick={startChat}
             className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3 rounded-xl shadow-lg transition-transform hover:scale-105"
@@ -73,7 +89,7 @@ function App() {
           </button>
         </div>
       ) : !showProfile ? (
-        <div className="max-w-xl mx-auto bg-gray-800 p-6 rounded-xl shadow-lg">
+        <div className="max-w-xl mx-auto bg-gray-800 text-white p-6 rounded-xl shadow-lg">
           {step < questions.length ? (
             <form onSubmit={handleNext}>
               <p className="mb-4">{questions[step]}</p>
@@ -103,22 +119,29 @@ function App() {
           )}
         </div>
       ) : (
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-semibold mb-6 text-center">✨ People You Might Click With</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {sampleMatches.map((match, i) => (
               <div
                 key={i}
-                className="bg-white text-black rounded-xl p-4 shadow hover:scale-105 transition-transform duration-300"
+                className="relative group [perspective:1000px] h-64"
               >
-                <h3 className="font-bold text-lg">{match.name}</h3>
-                <p className="text-sm">{match.role}</p>
-                <p className="text-xs mt-2">Skills: {match.skills.join(', ')}</p>
-                <p className="text-xs">Interests: {match.interests.join(', ')}</p>
-                <p className="text-xs">Location: {match.location}</p>
-                <button className="mt-3 bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded">
-                  Connect 💬
-                </button>
+                <div className="absolute inset-0 transition-transform duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+                  <div className="absolute inset-0 bg-white text-black rounded-xl p-4 shadow">
+                    <h3 className="font-bold text-lg">{match.name}</h3>
+                    <p className="text-sm">{match.role}</p>
+                    <p className="text-xs mt-2">Skills: {match.skills.join(', ')}</p>
+                    <p className="text-xs">Interests: {match.interests.join(', ')}</p>
+                    <p className="text-xs">Location: {match.location}</p>
+                  </div>
+                  <div className="absolute inset-0 bg-red-600 text-white rounded-xl p-4 shadow [transform:rotateY(180deg)] [backface-visibility:hidden]">
+                    <p className="text-sm">{match.about}</p>
+                    <button className="mt-4 bg-black hover:bg-gray-800 px-4 py-1 text-sm rounded">
+                      Connect 💬
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
