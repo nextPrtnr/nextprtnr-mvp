@@ -1,4 +1,8 @@
+// nextPrtnr MVP v1: React + Tailwind App (with Landing Page)
+// Chatbot Onboarding → Auto Profile → Match Suggestions
+
 import React, { useState } from 'react';
+import './App.css';
 
 const sampleMatches = [
   {
@@ -38,7 +42,7 @@ const questions = [
 ];
 
 function App() {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1); // start with landing page
   const [answers, setAnswers] = useState([]);
   const [showProfile, setShowProfile] = useState(false);
 
@@ -53,14 +57,22 @@ function App() {
   };
 
   const finishChat = () => setShowProfile(true);
+  const startChat = () => setStep(0);
 
   return (
     <div className="bg-black min-h-screen text-white font-sans p-6">
-      <header className="text-3xl font-bold text-center mb-6">
-        Find Your Perfect Partner
-      </header>
-
-      {!showProfile ? (
+      {step === -1 ? (
+        <div className="text-center flex flex-col items-center justify-center min-h-screen">
+          <h1 className="text-5xl font-bold mb-4">nextPrtnr</h1>
+          <p className="text-xl text-gray-300 mb-8">Where Vibes and Vision Match</p>
+          <button
+            onClick={startChat}
+            className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3 rounded-xl shadow-lg transition-transform hover:scale-105"
+          >
+            Let's Find 🚀
+          </button>
+        </div>
+      ) : !showProfile ? (
         <div className="max-w-xl mx-auto bg-gray-800 p-6 rounded-xl shadow-lg">
           {step < questions.length ? (
             <form onSubmit={handleNext}>
@@ -92,12 +104,12 @@ function App() {
         </div>
       ) : (
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-xl mb-4">Your Matches</h2>
-          <div className="grid gap-4 md:grid-cols-3">
+          <h2 className="text-2xl font-semibold mb-6 text-center">✨ People You Might Click With</h2>
+          <div className="grid gap-6 md:grid-cols-3">
             {sampleMatches.map((match, i) => (
               <div
                 key={i}
-                className="bg-white text-black rounded-xl p-4 shadow hover:scale-105 transition"
+                className="bg-white text-black rounded-xl p-4 shadow hover:scale-105 transition-transform duration-300"
               >
                 <h3 className="font-bold text-lg">{match.name}</h3>
                 <p className="text-sm">{match.role}</p>
@@ -105,7 +117,7 @@ function App() {
                 <p className="text-xs">Interests: {match.interests.join(', ')}</p>
                 <p className="text-xs">Location: {match.location}</p>
                 <button className="mt-3 bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded">
-                  Connect
+                  Connect 💬
                 </button>
               </div>
             ))}
@@ -117,4 +129,3 @@ function App() {
 }
 
 export default App;
-
