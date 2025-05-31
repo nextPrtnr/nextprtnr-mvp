@@ -2,7 +2,7 @@
 // Chatbot Onboarding → Auto Profile → Match Suggestions + Theme Toggle + Card Flip
 
 import React, { useState } from 'react';
-import './App.css';
+import './index.css';
 
 const sampleMatches = [
   {
